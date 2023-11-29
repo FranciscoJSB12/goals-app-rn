@@ -17,11 +17,15 @@ export default function App() {
 
   const [goals, setGoals] = useState<GoalType[]>([]);
 
-  function addGoalHandler (value:string) {
+  function addGoalHandler(value:string) {
     setGoals(prev => [...prev, {
       key: String(nextId++), 
       text: value
     }]);
+  }
+
+  function deleteGoalhandler(id:string) {
+    setGoals(prev => prev.filter(goal => goal.key !== id));
   }
 
   return (
@@ -33,7 +37,12 @@ export default function App() {
         <FlatList
           showsVerticalScrollIndicator={false}
           data={goals}
-          renderItem={({ item }) => <GoalItem text={item.text}/>
+          renderItem={({ item }) => 
+            <GoalItem 
+              text={item.text}
+              id={item.key}
+              onDeleteGoal={deleteGoalhandler}
+            />
           }
         />
       </View>
