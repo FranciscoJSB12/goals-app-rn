@@ -1,44 +1,43 @@
-import { useState } from 'react';
-import { StyleSheet, 
-         View,
-         FlatList,
-         Button
-} from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import { GoalInput } from './components/GoalInput';
-import { GoalItem } from './components/GoalItem';
+import { useState } from "react";
+import { StyleSheet, View, FlatList, Button } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { GoalInput } from "./components/GoalInput";
+import { GoalItem } from "./components/GoalItem";
 
 interface GoalType {
-  key: string,
-  text: string
+  key: string;
+  text: string;
 }
 
-let nextId:number = 0;
+let nextId: number = 0;
 
 export default function App() {
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const [goals, setGoals] = useState<GoalType[]>([]);
 
-  function startAddGoalHandler () {
+  function startAddGoalHandler() {
     setModalIsVisible(true);
   }
 
-  function endAddGoalHandler () {
+  function endAddGoalHandler() {
     setModalIsVisible(false);
   }
 
-  function addGoalHandler(value:string) {
+  function addGoalHandler(value: string) {
     if (!!value) {
-      setGoals(prev => [...prev, {
-        key: String(nextId++), 
-        text: value
-      }]);
+      setGoals((prev) => [
+        ...prev,
+        {
+          key: String(nextId++),
+          text: value,
+        },
+      ]);
       endAddGoalHandler();
     }
   }
 
-  function deleteGoalhandler(id:string) {
-    setGoals(prev => prev.filter(goal => goal.key !== id));
+  function deleteGoalhandler(id: string) {
+    setGoals((prev) => prev.filter((goal) => goal.key !== id));
   }
 
   return (
@@ -50,7 +49,7 @@ export default function App() {
           color="#5e0acc"
           onPress={startAddGoalHandler}
         />
-        <GoalInput 
+        <GoalInput
           onAddGoal={addGoalHandler}
           onCancel={endAddGoalHandler}
           isVisible={modalIsVisible}
@@ -59,13 +58,13 @@ export default function App() {
           <FlatList
             showsVerticalScrollIndicator={false}
             data={goals}
-            renderItem={({ item }) => 
-              <GoalItem 
+            renderItem={({ item }) => (
+              <GoalItem
                 text={item.text}
                 id={item.key}
                 onDeleteGoal={deleteGoalhandler}
               />
-            }
+            )}
           />
         </View>
       </View>
@@ -77,9 +76,9 @@ const styles = StyleSheet.create({
   appContainer: {
     flex: 1,
     paddingTop: 50,
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
   },
   goalsContainer: {
-    flex: 5
-  }
+    flex: 5,
+  },
 });
