@@ -3,14 +3,18 @@ import {
     StyleSheet,
     View,
     TextInput,
-    Button
+    Button,
+    Modal,
+    Image
 } from "react-native";
 
 interface GoalInputProps {
-    onAddGoal: (value:string) => void
+    onAddGoal: (value:string) => void,
+    onCancel: () => void,
+    isVisible: boolean
 }
 
-export function GoalInput({ onAddGoal }:GoalInputProps) {
+export function GoalInput({ onAddGoal, onCancel, isVisible }:GoalInputProps) {
     const [value, setValue] = useState("");
     
     function goalInputHandler (enteredText:string) {
@@ -23,37 +27,72 @@ export function GoalInput({ onAddGoal }:GoalInputProps) {
     }
 
     return (
-        <View style={styles.inputContainer}>
-            <TextInput 
-                placeholder='Your course goals!'
-                value={value}
-                onChangeText={goalInputHandler}
-                style={styles.textInput}
-            />
-            <Button 
-                title='Add goal'
-                onPress={addGoalHandler}
-            />
-      </View>
+        <Modal 
+            visible={isVisible}
+            animationType="slide"
+        >
+            <View style={styles.inputContainer}>
+                <Image
+                    style={styles.image} 
+                    source={require("../assets/images/goal.png")}
+                />
+                <TextInput 
+                    placeholder="Your course goals!"
+                    value={value}
+                    onChangeText={goalInputHandler}
+                    style={styles.textInput}
+                />
+                <View style={styles.buttonContainer}>
+                    <View style={styles.button}>
+                        <Button 
+                            title="Cancel"
+                            onPress={onCancel}
+                            color="#f31282"
+                        />
+                    </View>
+                    <View style={styles.button}>
+                        <Button 
+                            title="Add goal"
+                            onPress={addGoalHandler}
+                            color="#5e0acc"
+                        />
+                    </View>
+                </View>
+            </View>
+        </Modal>
     );
 }
 
 const styles = StyleSheet.create({
     inputContainer: {
         flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 24,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 16,
+        backgroundColor: "#311b6b"
+    },
+    image: {
+        width: 100,
+        height: 100,
+        margin: 20
     },
     textInput: {
         borderWidth: 1,
-        borderColor: '#ccc',
-        width: '70%',
+        borderColor: "#e4d0ff",
+        backgroundColor: "#e4d0ff",
+        color: "#120438",
+        borderRadius: 6,
+        width: "100%",
         marginRight: 8,
-        padding: 8
+        padding: 16
+    },
+    buttonContainer: {
+        marginTop: 16,
+        flexDirection: "row"
+    },
+    button: {
+        width: 100,
+        marginHorizontal: 8
     }
 });
 

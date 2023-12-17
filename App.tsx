@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { StyleSheet, 
          View,
-         FlatList
+         FlatList,
+         Button
 } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { GoalInput } from './components/GoalInput';
 import { GoalItem } from './components/GoalItem';
 
@@ -14,14 +16,25 @@ interface GoalType {
 let nextId:number = 0;
 
 export default function App() {
-
+  const [modalIsVisible, setModalIsVisible] = useState(false);
   const [goals, setGoals] = useState<GoalType[]>([]);
 
+  function startAddGoalHandler () {
+    setModalIsVisible(true);
+  }
+
+  function endAddGoalHandler () {
+    setModalIsVisible(false);
+  }
+
   function addGoalHandler(value:string) {
-    setGoals(prev => [...prev, {
-      key: String(nextId++), 
-      text: value
-    }]);
+    if (!!value) {
+      setGoals(prev => [...prev, {
+        key: String(nextId++), 
+        text: value
+      }]);
+      endAddGoalHandler();
+    }
   }
 
   function deleteGoalhandler(id:string) {
@@ -29,24 +42,34 @@ export default function App() {
   }
 
   return (
-    <View style={styles.appContainer}>
-      <GoalInput
-        onAddGoal={addGoalHandler}
-      />
-      <View style={styles.goalsContainer}>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={goals}
-          renderItem={({ item }) => 
-            <GoalItem 
-              text={item.text}
-              id={item.key}
-              onDeleteGoal={deleteGoalhandler}
-            />
-          }
+    <>
+      <StatusBar style="light" />
+      <View style={styles.appContainer}>
+        <Button
+          title="Add new goal"
+          color="#5e0acc"
+          onPress={startAddGoalHandler}
         />
+        <GoalInput 
+          onAddGoal={addGoalHandler}
+          onCancel={endAddGoalHandler}
+          isVisible={modalIsVisible}
+        />
+        <View style={styles.goalsContainer}>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={goals}
+            renderItem={({ item }) => 
+              <GoalItem 
+                text={item.text}
+                id={item.key}
+                onDeleteGoal={deleteGoalhandler}
+              />
+            }
+          />
+        </View>
       </View>
-    </View>
+    </>
   );
 }
 
